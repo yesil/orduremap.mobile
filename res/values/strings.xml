@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">orduremap.con</string>
+	<string name="txt_gps_dialog">GPS kapalı görünüyor, açmak istermisiniz ?</string>
+	<string name="btn_ok">Tamam</string>
+	<string name="btn_yes">Evet</string>
+	<string name="btn_exit">Çıkış</string>
+	<string name="plastic">Plastik</string>
+	<string name="chemical">Kimyasal</string>
+	<string name="glass">Cam</string>
+	<string name="metal">Metal</string>
+	<string name="paper">Kağıt</string>
+	<string name="ordure_type">Çöp tipi</string>
+	<string name="service_start">Resimler orduremap.com\'a gönderilmeye başlandı</string>
+	<string name="service_stop">Bütün çöp resimleri orduremap.com\'a gönderildi</string>
+</resources>
