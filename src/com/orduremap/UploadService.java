@@ -74,7 +74,7 @@ public class UploadService extends Service {
 		toast.show();
 	}
 
-	public final void uploadFile(final File file) {
+	public final void uploadFile(final File file, final String lt, final String lg) {
 		executor.submit(new Runnable() {
 			@Override
 			public void run() {
@@ -86,8 +86,8 @@ public class UploadService extends Service {
 						httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 						MultipartEntity mpEntity = new MultipartEntity();
 						StringBody name = new StringBody(file.getName());
-						StringBody latitude = new StringBody(exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE));
-						StringBody longitude = new StringBody(exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE));
+						StringBody latitude = new StringBody(lt);
+						StringBody longitude = new StringBody(lg);
 						ContentBody cbFile = new FileBody(file, "image/jpeg");
 						mpEntity.addPart("name", name);
 						mpEntity.addPart("latitude", latitude);

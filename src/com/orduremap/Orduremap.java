@@ -210,12 +210,8 @@ public class Orduremap extends Activity implements SurfaceHolder.Callback, Shutt
 						outStream = new FileOutputStream(file);
 						outStream.write(data);
 						outStream.close();
-						ExifInterface exif = new ExifInterface(file.getAbsolutePath());
 						Location location = localManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-						exif.setAttribute(ExifInterface.TAG_GPS_LATITUDE, String.valueOf(location.getLatitude()));
-						exif.setAttribute(ExifInterface.TAG_GPS_LONGITUDE, String.valueOf(location.getLongitude()));
-						exif.saveAttributes();
-						uploadService.uploadFile(file);
+						uploadService.uploadFile(file, String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
 					} catch (FileNotFoundException e) {
 						Log.e("Orduremap", file.getAbsolutePath() + "problème lors du sauvegarde de l'ordure", e);
 					} catch (IOException e) {
