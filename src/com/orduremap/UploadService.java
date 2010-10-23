@@ -22,7 +22,6 @@ import org.apache.http.params.HttpParams;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.media.ExifInterface;
 import android.net.ConnectivityManager;
 import android.os.Binder;
 import android.os.IBinder;
@@ -74,24 +73,24 @@ public class UploadService extends Service {
 		toast.show();
 	}
 
-	public final void uploadFile(final File file, final String lt, final String lg) {
+	public final void uploadFile(final File file, final String lt, final String lg, final String ts) {
 		executor.submit(new Runnable() {
 			@Override
 			public void run() {
 				while (true) {
 					try {
-						ExifInterface exif = new ExifInterface(file.getAbsolutePath());
-
 						HttpPost post = new HttpPost(postURL);
 						httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
 						MultipartEntity mpEntity = new MultipartEntity();
 						StringBody name = new StringBody(file.getName());
 						StringBody latitude = new StringBody(lt);
 						StringBody longitude = new StringBody(lg);
+						StringBody tags = new StringBody(ts);
 						ContentBody cbFile = new FileBody(file, "image/jpeg");
 						mpEntity.addPart("name", name);
 						mpEntity.addPart("latitude", latitude);
 						mpEntity.addPart("longitude", longitude);
+						mpEntity.addPart("tags", tags);
 						mpEntity.addPart("file", cbFile);
 						post.setEntity(mpEntity);
 						HttpResponse response = httpclient.execute(post);

@@ -204,14 +204,14 @@ public class Orduremap extends Activity implements SurfaceHolder.Callback, Shutt
 					try {
 						File dir = new File(root, "/Android/data/org.orduremap/").getAbsoluteFile();
 						Log.d("Orduremap", dir.getAbsolutePath() + " disponible:" + dir.mkdirs());
-						file = new File(dir, String.format("orduremap-%s-%d.jpg", arrayToString(tags.toArray(), '+'), System
-								.currentTimeMillis())).getAbsoluteFile();
+						file = new File(dir, String.format("orduremap-%d.jpg", System.currentTimeMillis())).getAbsoluteFile();
 						FileOutputStream outStream = null;
 						outStream = new FileOutputStream(file);
 						outStream.write(data);
 						outStream.close();
 						Location location = localManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-						uploadService.uploadFile(file, String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
+						String ts = arrayToString(tags.toArray(), ',');
+						uploadService.uploadFile(file, String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()), ts);
 					} catch (FileNotFoundException e) {
 						Log.e("Orduremap", file.getAbsolutePath() + "problème lors du sauvegarde de l'ordure", e);
 					} catch (IOException e) {
