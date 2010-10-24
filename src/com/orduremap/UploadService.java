@@ -29,9 +29,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class UploadService extends Service {
-	private HttpClient httpclient = new DefaultHttpClient();
 	private ExecutorService executor = Executors.newSingleThreadExecutor();
-	private final String postURL = "http://orduremap.appspot.com/upload";
 
 	/**
 	 * Class for clients to access. Because we know this service always runs in
@@ -41,13 +39,6 @@ public class UploadService extends Service {
 		UploadService getService() {
 			return UploadService.this;
 		}
-	}
-
-	@Override
-	public void onCreate() {
-		HttpParams params = httpclient.getParams();
-		HttpConnectionParams.setConnectionTimeout(params, 60000);
-		HttpConnectionParams.setSoTimeout(params, 60000);
 	}
 
 	@Override
@@ -72,52 +63,9 @@ public class UploadService extends Service {
 	}
 
 	public final void uploadFile(final File file, final String lt, final String lg, final String ts) {
-		executor.submit(new Runnable() {
-			@Override
-			public void run() {
-				final ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-				while (true) {
-					boolean connected = false;
-					try {
-						connected = cm.getActiveNetworkInfo().isConnected();
-						if (connected) {
-							try {
-								HttpPost post = new HttpPost(postURL);
-								httpclient.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
-								MultipartEntity mpEntity = new MultipartEntity();
-								StringBody name = new StringBody(file.getName());
-								StringBody latitude = new StringBody(lt);
-								StringBody longitude = new StringBody(lg);
-								StringBody tags = new StringBody(ts);
-								ContentBody cbFile = new FileBody(file, "image/jpeg");
-								mpEntity.addPart("name", name);
-								mpEntity.addPart("latitude", latitude);
-								mpEntity.addPart("longitude", longitude);
-								mpEntity.addPart("tags", tags);
-								mpEntity.addPart("file", cbFile);
-								post.setEntity(mpEntity);
-								HttpResponse response = httpclient.execute(post);
-								byte[] responseData = new byte[response.getEntity().getContent().available()];
-								response.getEntity().getContent().read(responseData);
-								Log.d("Orduremap", new String(responseData));
-								file.delete();
-							} catch (ClientProtocolException e) {
-								Log.e("Orduremap Upload Service", "échec du chargement de l'ordure", e);
-							} catch (IOException e) {
-								Log.e("Orduremap Upload Service", "échec du chargement de l'ordure", e);
-							}
-							break;
-						}
-					} catch (Exception e) {
-						Log.e("Orduremap Upload Service", "Problème de connexion", e);
-						try {
-							Thread.sleep(60000);
-						} catch (InterruptedException e1) {
-							e1.printStackTrace();
-						}
-					}
-				}
-			}
-		});
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		OrdureRunnable runnable = new OrdureRunnable(cm, file, lt, lg, ts);
+		executor.submit(runnable);
+
 	}
 }

@@ -56,7 +56,7 @@ public class Orduremap extends Activity implements SurfaceHolder.Callback, Shutt
 		setContentView(R.layout.main);
 		view = (SurfaceView) findViewById(R.id.camView);
 		btnCam = (ImageButton) findViewById(R.id.btnCam);
-		btnCam.setEnabled(false);
+		btnCam.setEnabled(true);
 		btnCam.setOnClickListener(this);
 		SurfaceHolder mSurfaceHolder = view.getHolder();
 		mSurfaceHolder.addCallback(this);
@@ -98,7 +98,7 @@ public class Orduremap extends Activity implements SurfaceHolder.Callback, Shutt
 	@Override
 	protected void onResume() {
 		super.onResume();
-		btnCam.setEnabled(false);
+		//btnCam.setEnabled(false);
 	}
 
 	@Override
